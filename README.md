@@ -3,13 +3,19 @@
 Easy to use PHP Bitcoin and Litecoin address validator.
 One day I will add other crypto currencies. Or how about you? :)
 
+## Installation
+
+=======
+```
+composer require merkeleon/php-cryptocurrency-address-validation
+```
+
 ## Usage
 
-
 ```php
-use Merkeleon\PhpCryptocurrencyAddressValidation\Validation;
+use Merkeleon\PhpCryptocurrencyAddressValidation\Enums\CurrencyEnum;use Merkeleon\PhpCryptocurrencyAddressValidation\Validator;
 
-$validator = Validation::make('BTC');
-var_dump($validator->validate('1QLbGuc3WGKKKpLs4pBp9H6jiQ2MgPkXRp'));
+$validator = Validator::make(CurrencyEnum::BITCOIN);
+var_dump($validator->isValid('1QLbGuc3WGKKKpLs4pBp9H6jiQ2MgPkXRp'));
 
 ```
