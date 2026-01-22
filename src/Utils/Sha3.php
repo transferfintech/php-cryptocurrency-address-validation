@@ -368,7 +368,7 @@ final class Sha3
      * @param int $length (optional)
      * @return string
      */
-    private static function ourSubstr($str, $start = 0, $length = null)
+    private static function ourSubstr(string $str, int $start = 0, ?int $length = null): string
     {
         // Premature optimization: cache the function_exists() result
         static $exists = null;
