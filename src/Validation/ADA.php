@@ -3,6 +3,7 @@
 namespace Merkeleon\PhpCryptocurrencyAddressValidation\Validation;
 
 use CBOR\ByteStringObject;
+use CBOR\Tag\GenericTag;
 use Merkeleon\PhpCryptocurrencyAddressValidation\Base58Validation;
 use Merkeleon\PhpCryptocurrencyAddressValidation\Utils\Bech32Decoder;
 use Merkeleon\PhpCryptocurrencyAddressValidation\Utils\Bech32Exception;
@@ -26,14 +27,14 @@ class ADA extends Base58Validation
             $otherObjectManager = new OtherObject\OtherObjectManager();
             $otherObjectManager->add(OtherObject\SimpleObject::class);
 
-            $tagManager = new Tag\TagObjectManager();
-            $tagManager->add(Tag\PositiveBigIntegerTag::class);
+            $tagManager = new Tag\TagManager();
+            $tagManager->add(Tag\UnsignedBigIntegerTag::class);
 
             $decoder = new Decoder($tagManager, $otherObjectManager);
             $data = hex2bin($addressHex);
             $stream = new StringStream($data);
             $object = $decoder->decode($stream);
-            $normalizedData = $object->getNormalizedData();
+            $normalizedData = $object->normalize();
             if ($object->getMajorType() != 4) {
                 return false;
             }
@@ -43,15 +44,17 @@ class ADA extends Base58Validation
             if (!is_numeric($normalizedData[1])) {
                 return false;
             }
-            if (!$normalizedData[0] instanceof ByteStringObject) {
+            if (!$normalizedData[0] instanceof GenericTag) {
                 return false;
             }
-            /** @var ByteStringObject $bs */
-            $bs = $normalizedData[0];
+            $bs = $normalizedData[0]->getValue();
+            if (!$bs instanceof ByteStringObject) {
+                return false;
+            }
             if (!in_array($bs->getLength(), $this->validLengths)) {
                 return false;
             }
-            $crcCalculated = crc32($normalizedData[0]->getValue());
+            $crcCalculated = crc32($bs->getValue());
             $validCrc = $normalizedData[1];
 
             return $crcCalculated == (int)$validCrc;

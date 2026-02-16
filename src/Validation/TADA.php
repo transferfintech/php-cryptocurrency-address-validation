@@ -2,9 +2,6 @@
 
 namespace Merkeleon\PhpCryptocurrencyAddressValidation\Validation;
 
-use Merkeleon\PhpCryptocurrencyAddressValidation\Base58Validation;
-use Merkeleon\PhpCryptocurrencyAddressValidation\Utils\Bech32Decoder;
-use Merkeleon\PhpCryptocurrencyAddressValidation\Utils\Bech32Exception;
 use CBOR\Decoder;
 use CBOR\OtherObject;
 use CBOR\Tag;
